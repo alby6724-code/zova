@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /categories
+Allow: /category/
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://zioeemarket.com/sitemap.xml
