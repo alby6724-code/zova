@@ -33,14 +33,6 @@ Built strictly to match the visual design, typography, spacing, and component hi
 
 ---
 
-## 🔑 Demo Accounts & Credentials
-
-| Role | Email | Password | 2FA TOTP Code | Access Level |
-| :--- | :--- | :--- | :--- | :--- |
-| **Super Admin** | `admin@olx.com` | `admin123` | `123456` | Full system access, audit logs, role changes |
-| **Admin** | `sarah.admin@olx.com` | `admin123` | `123456` | User management, listings moderation, reports |
-| **Moderator** | `vikram.mod@olx.com` | `mod123` | N/A | Listings approval, fraud reports, chat oversight |
-| **Support** | `anjali.support@olx.com` | `support123` | N/A | Support tickets, customer inquiries |
 
 ---
 
