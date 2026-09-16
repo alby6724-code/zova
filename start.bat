@@ -1,0 +1,3 @@
+@echo off
+echo Starting OLX Marketplace (Backend + Frontend)...
+node scripts/start-all.js
