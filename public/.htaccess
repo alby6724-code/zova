@@ -1,0 +1,14 @@
+ErrorDocument 404 /index.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Do not rewrite API requests or real files/directories.
+  RewriteCond %{REQUEST_URI} !^/api/ [NC]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # Route client-side routes such as /admin to the app entry point.
+  RewriteRule ^ index.html [L]
+</IfModule>
