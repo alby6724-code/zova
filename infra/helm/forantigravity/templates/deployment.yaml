@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-server
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-server
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}-server
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}-server
+    spec:
+      containers:
+        - name: server
+          image: "{{ .Values.image.server.repository }}:{{ .Values.image.server.tag }}"
+          imagePullPolicy: {{ .Values.image.server.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.serverPort }}
+          livenessProbe:
+            httpGet:
+              path: /api/system/health
+              port: {{ .Values.service.serverPort }}
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /api/system/health
+              port: {{ .Values.service.serverPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-client
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}-client
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ .Release.Name }}-client
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ .Release.Name }}-client
+    spec:
+      containers:
+        - name: client
+          image: "{{ .Values.image.client.repository }}:{{ .Values.image.client.tag }}"
+          imagePullPolicy: {{ .Values.image.client.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.clientPort }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}

@@ -1,0 +1,73 @@
+# Default values for forantigravity
+replicaCount: 3
+
+image:
+  server:
+    repository: ghcr.io/user/forantigravity-server
+    pullPolicy: IfNotPresent
+    tag: "latest"
+  client:
+    repository: ghcr.io/user/forantigravity-client
+    pullPolicy: IfNotPresent
+    tag: "latest"
+
+service:
+  type: ClusterIP
+  serverPort: 5000
+  clientPort: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/websocket-services: "forantigravity-server"
+  hosts:
+    - host: forantigravity.internal
+      paths:
+        - path: /api
+          pathType: Prefix
+          service: server
+        - path: /ws
+          pathType: Prefix
+          service: server
+        - path: /
+          pathType: Prefix
+          service: client
+    - host: admin.forantigravity.internal
+      paths:
+        - path: /api/admin
+          pathType: Prefix
+          service: server
+        - path: /api
+          pathType: Prefix
+          service: server
+        - path: /ws
+          pathType: Prefix
+          service: server
+        - path: /
+          pathType: Prefix
+          service: client
+  tls:
+    - secretName: forantigravity-tls
+      hosts:
+        - forantigravity.internal
+        - admin.forantigravity.internal
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1024Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 75
+  targetMemoryUtilizationPercentage: 80

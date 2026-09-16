@@ -1,0 +1,14 @@
+apiVersion: v2
+name: forantigravity
+description: Production Helm chart for ForAntigravity OLX-style Marketplace & Admin Panel
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - marketplace
+  - admin-panel
+  - olx
+  - production
+maintainers:
+  - name: ForAntigravity Core Team
+    email: ops@forantigravity.internal

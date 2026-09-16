@@ -1,0 +1,136 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "ForAntigravity API",
+    "version": "1.0.0",
+    "description": "Production REST and WebSocket API for ForAntigravity OLX-style Marketplace Admin Panel"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/api",
+      "description": "Local Development Server"
+    },
+    {
+      "url": "https://admin.forantigravity.internal/api",
+      "description": "Staging / Production Cluster"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/system/health": {
+      "get": {
+        "summary": "Health check endpoint",
+        "responses": {
+          "200": {
+            "description": "System health metrics"
+          }
+        }
+      }
+    },
+    "/system/metrics": {
+      "get": {
+        "summary": "Prometheus formatted metrics",
+        "responses": {
+          "200": {
+            "description": "Plain text metrics"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "User login with optional 2FA TOTP code",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": { "type": "string" },
+                  "password": { "type": "string" },
+                  "totpCode": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "JWT tokens or 2FA challenge" }
+        }
+      }
+    },
+    "/dashboard/overview": {
+      "get": {
+        "summary": "Retrieve complete composite dashboard data (KPIs, Donut, Line, Tables)",
+        "responses": {
+          "200": { "description": "Dashboard overview structure" }
+        }
+      }
+    },
+    "/listings": {
+      "get": {
+        "summary": "Get paginated marketplace listings",
+        "parameters": [
+          { "name": "search", "in": "query", "schema": { "type": "string" } },
+          { "name": "category", "in": "query", "schema": { "type": "string" } },
+          { "name": "status", "in": "query", "schema": { "type": "string" } },
+          { "name": "page", "in": "query", "schema": { "type": "integer" } },
+          { "name": "limit", "in": "query", "schema": { "type": "integer" } }
+        ],
+        "responses": {
+          "200": { "description": "Paginated listings array" }
+        }
+      },
+      "post": {
+        "summary": "Create new marketplace listing",
+        "responses": {
+          "201": { "description": "Created listing" }
+        }
+      }
+    },
+    "/listings/{id}/status": {
+      "patch": {
+        "summary": "Moderate listing status (Approve, Flag, Feature, Remove)",
+        "responses": {
+          "200": { "description": "Updated listing" }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "summary": "Get paginated user accounts",
+        "responses": {
+          "200": { "description": "Paginated user accounts" }
+        }
+      },
+      "post": {
+        "summary": "Create new user account",
+        "responses": {
+          "201": { "description": "Created user" }
+        }
+      }
+    },
+    "/reports/{id}/resolve": {
+      "post": {
+        "summary": "Resolve report with dismissal, removal, or seller ban",
+        "responses": {
+          "200": { "description": "Resolution result" }
+        }
+      }
+    }
+  }
+}
